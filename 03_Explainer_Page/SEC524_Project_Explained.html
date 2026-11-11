@@ -1,0 +1,494 @@
+<title>SEC 524 Project Briefing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: a single reading column styled like an engineering briefing sheet; diagrams break out in framed panels. */
+:root{
+  --bg:#f3f5f7; --panel:#ffffff; --fg:#17212b; --muted:#56636f; --line:#d3dae1;
+  --accent:#c4660a; --accent-soft:#fbead8; --steel:#2f5f86; --steel-soft:#e1ebf4;
+  --ok:#2c7a4b; --ok-soft:#dff1e6; --warn:#a15c00; --warn-soft:#fdf0d5; --bad:#b03636; --bad-soft:#f8e1e1;
+  --f-body:"IBM Plex Sans","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-ar:"IBM Plex Sans Arabic","IBM Plex Sans",Tahoma,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11171d; --panel:#18212a; --fg:#e4eaf0; --muted:#9aa8b5; --line:#2c3a47;
+  --accent:#f0953a; --accent-soft:#3a2a18; --steel:#7fb0d8; --steel-soft:#1d2e3d;
+  --ok:#6cc792; --ok-soft:#173022; --warn:#e9b04a; --warn-soft:#352914; --bad:#ec8080; --bad-soft:#3a1d1d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11171d; --panel:#18212a; --fg:#e4eaf0; --muted:#9aa8b5; --line:#2c3a47;
+  --accent:#f0953a; --accent-soft:#3a2a18; --steel:#7fb0d8; --steel-soft:#1d2e3d;
+  --ok:#6cc792; --ok-soft:#173022; --warn:#e9b04a; --warn-soft:#352914; --bad:#ec8080; --bad-soft:#3a1d1d; color-scheme:dark}
+
+html:not([lang="ar"]) .ar{display:none!important}
+html[lang="ar"] .en{display:none!important}
+html[lang="ar"] body{font-family:var(--f-ar)}
+
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:860px;margin:0 auto;padding-block:24px 64px}
+h1,h2,h3{line-height:1.25;text-wrap:balance;margin:0}
+h1{font-size:2rem;font-weight:700}
+h2{font-size:1.4rem;font-weight:700;display:flex;gap:12px;align-items:baseline}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0;max-width:68ch}
+.num{font-family:var(--f-mono);font-size:.85rem;color:var(--accent);font-weight:600;flex:none}
+.mono{font-family:var(--f-mono);font-size:.88em}
+.muted{color:var(--muted)}
+section{display:flex;flex-direction:column;gap:14px;padding-block:28px;border-top:1px solid var(--line)}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:10px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tag{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lang{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
+.lang button{font:inherit;font-size:.9rem;padding:6px 14px;border:0;background:transparent;color:var(--fg);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--steel);color:var(--panel);font-weight:600}
+.lang button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.hero{display:flex;flex-direction:column;gap:12px;padding-block:28px 8px}
+.lede{font-size:1.1rem;color:var(--muted)}
+
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card .k{font-size:.8rem;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+html[lang="ar"] .card .k{letter-spacing:0}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;overflow-x:auto}
+.panel svg{display:block;width:100%;height:auto;min-width:560px}
+.ltr{direction:ltr}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .ar{font-family:var(--f-ar);direction:rtl;unicode-bidi:embed}
+.ltr .ar,.bytes .ar{direction:rtl;unicode-bidi:embed}
+.cap{font-size:.85rem;color:var(--muted)}
+
+.analogy{background:var(--steel-soft);border-radius:8px;padding:14px 16px;display:flex;gap:10px}
+.analogy b{color:var(--steel)}
+
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:start;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+td.mono{white-space:nowrap}
+
+.marks{display:flex;height:34px;border-radius:6px;overflow:hidden;direction:ltr}
+.marks div{display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:.75rem;color:#fff;border-inline-end:1px solid var(--panel)}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 16px;font-size:.88rem}
+.legend span{display:flex;gap:8px;align-items:center}
+.sw{width:12px;height:12px;border-radius:3px;flex:none}
+
+.bytes{display:flex;flex-wrap:wrap;gap:6px;direction:ltr}
+.byte{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
+.byte code{font-family:var(--f-mono);font-size:1rem;padding:6px 8px;border-radius:5px;background:var(--steel-soft);color:var(--fg);width:100%;text-align:center}
+.byte.hot code{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.byte small{font-size:.72rem;color:var(--muted);text-align:center;line-height:1.3}
+
+.cols3{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.col{border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.col ul{margin:0;padding-inline-start:18px;display:flex;flex-direction:column;gap:6px}
+.c-ok{background:var(--ok-soft)} .c-ok h3{color:var(--ok)}
+.c-warn{background:var(--warn-soft)} .c-warn h3{color:var(--warn)}
+.c-bad{background:var(--bad-soft)} .c-bad h3{color:var(--bad)}
+
+.status{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.status li{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.pill{font-family:var(--f-mono);font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:99px;flex:none;margin-top:3px}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-warn{background:var(--warn-soft);color:var(--warn)} .p-bad{background:var(--bad-soft);color:var(--bad)}
+
+.note{border:1px solid var(--accent);background:var(--accent-soft);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.note h3{color:var(--accent)}
+
+ol.plan{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;counter-reset:s}
+ol.plan li{counter-increment:s;display:grid;grid-template-columns:40px 1fr;gap:12px;padding-block:10px;border-bottom:1px dashed var(--line)}
+ol.plan li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-mono);color:var(--accent);font-weight:600}
+details{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+summary{cursor:pointer;font-weight:600}
+details p{margin-top:8px}
+@media (prefers-reduced-motion:no-preference){.lang button{transition:background .15s}}
+@media (max-width:520px){h1{font-size:1.6rem}}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <span class="tag">SEC 524 · KFUPM</span>
+  <div class="lang" role="group" aria-label="Language">
+    <button id="btn-en" type="button" aria-pressed="true">English</button>
+    <button id="btn-ar" type="button" aria-pressed="false">عربي</button>
+  </div>
+</header>
+
+<div class="hero">
+  <span class="tag en">Project briefing · prepared 11 Nov 2026</span>
+  <span class="tag ar">ملخص المشروع · أُعدّ في 11 نوفمبر 2026</span>
+  <h1 class="en">The SEC 524 project, explained from zero</h1>
+  <h1 class="ar">مشروع SEC 524 مشروحاً من الصفر</h1>
+  <p class="lede en">What the course is, what the instructor wants, what Fawaz already built, what the evidence proves, and what is still missing before submission.</p>
+  <p class="lede ar">ما هو المقرر، وماذا يطلب الدكتور، وماذا بنى فواز، وماذا تثبت الأدلة، وما الذي ينقص قبل التسليم.</p>
+</div>
+
+<!-- 1 -->
+<section>
+  <h2><span class="num">01</span><span class="en">The 30-second version</span><span class="ar">الخلاصة في 30 ثانية</span></h2>
+  <div class="grid">
+    <div class="card">
+      <span class="k en">The course</span><span class="k ar">المقرر</span>
+      <p class="en"><b>SEC 524 Computer &amp; Network Forensics.</b> Digital forensics means investigating computer crimes like a detective: collect evidence, protect it, and prove what happened.</p>
+      <p class="ar"><b>SEC 524 الأدلة الجنائية الرقمية للحاسب والشبكات.</b> يعني التحقيق في جرائم الحاسب مثل المحقق: تجمع الدليل، تحميه، ثم تثبت ما حدث.</p>
+    </div>
+    <div class="card">
+      <span class="k en">The assignment</span><span class="k ar">المطلوب</span>
+      <p class="en">Pick one new technology, invent a realistic incident in it, run a small experiment, and write a <b>~3,000-word report</b> plus a <b>10-minute recorded talk</b>. Worth <b>25%</b> of the course.</p>
+      <p class="ar">اختيار تقنية حديثة، وتخيّل حادثة واقعية فيها، وعمل تجربة صغيرة، ثم كتابة <b>تقرير بحوالي 3000 كلمة</b> و<b>عرض مسجّل مدته 10 دقائق</b>. الوزن <b>25%</b> من درجة المقرر.</p>
+    </div>
+    <div class="card">
+      <span class="k en">Where you are</span><span class="k ar">أين وصلتم</span>
+      <p class="en">The <b>experiment is done</b> and the evidence is real. The <b>report is only a draft</b> with empty results sections, and the <b>slides are a draft</b> too.</p>
+      <p class="ar"><b>التجربة منتهية</b> والأدلة حقيقية. أما <b>التقرير فمسودة فقط</b> وأقسام النتائج فيه فارغة، و<b>الشرائح أيضاً مسودة</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <h2><span class="num">02</span><span class="en">What the instructor will grade</span><span class="ar">على ماذا سيضع الدكتور الدرجات</span></h2>
+  <p class="en">The brief splits the work into four parts (A to D) and grades it out of 100. The bar below is drawn to scale. Notice that the framework and the practical work together are 44 marks, almost half.</p>
+  <p class="ar">ملف المتطلبات يقسم العمل إلى أربعة أجزاء (A إلى D) والدرجة من 100. الشريط بالأسفل مرسوم بالنسبة الحقيقية. لاحظ أن الإطار والجزء العملي معاً 44 درجة، أي تقريباً النصف.</p>
+  <div class="marks" role="img" aria-label="Marks: 12, 13, 8, 17, 15, 12, 7, 6, 6, 4">
+    <div style="flex:12;background:#5b7a99">12</div><div style="flex:13;background:#3f6283">13</div><div style="flex:8;background:#7b8ea3">8</div>
+    <div style="flex:17;background:#c4660a">17</div><div style="flex:15;background:#d9822b">15</div><div style="flex:12;background:#e39d55">12</div>
+    <div style="flex:7;background:#4c8a6a">7</div><div style="flex:6;background:#6a7d8c">6</div><div style="flex:6;background:#8695a3">6</div><div style="flex:4;background:#9aa6b2">4</div>
+  </div>
+  <div class="legend">
+    <span><i class="sw" style="background:#5b7a99"></i><span class="en">Part A · Technology &amp; threat context (12)</span><span class="ar">الجزء A · التقنية والتهديد (12)</span></span>
+    <span><i class="sw" style="background:#3f6283"></i><span class="en">Part B · Forensic challenges (13)</span><span class="ar">الجزء B · تحديات التحقيق (13)</span></span>
+    <span><i class="sw" style="background:#7b8ea3"></i><span class="en">Legal, ethics, chain of custody (8)</span><span class="ar">القانون والأخلاقيات وسلسلة الحيازة (8)</span></span>
+    <span><i class="sw" style="background:#c4660a"></i><span class="en">Part C · Investigation framework (17)</span><span class="ar">الجزء C · إطار التحقيق (17)</span></span>
+    <span><i class="sw" style="background:#d9822b"></i><span class="en">Part D · Practical execution (15)</span><span class="ar">الجزء D · تنفيذ التجربة (15)</span></span>
+    <span><i class="sw" style="background:#e39d55"></i><span class="en">Part D · Analysis &amp; validation (12)</span><span class="ar">الجزء D · التحليل والتحقق (12)</span></span>
+    <span><i class="sw" style="background:#4c8a6a"></i><span class="en">Limitations &amp; recommendations (7)</span><span class="ar">القيود والتوصيات (7)</span></span>
+    <span><i class="sw" style="background:#6a7d8c"></i><span class="en">Research quality &amp; references (6)</span><span class="ar">جودة المراجع (6)</span></span>
+    <span><i class="sw" style="background:#8695a3"></i><span class="en">Report professionalism (6)</span><span class="ar">احترافية التقرير (6)</span></span>
+    <span><i class="sw" style="background:#9aa6b2"></i><span class="en">Recorded presentation (4)</span><span class="ar">العرض المسجّل (4)</span></span>
+  </div>
+  <p class="cap en">Format rules: PDF, 12-pt Times New Roman, 1.5 line spacing, IEEE or APA references, 3,000 words ±10% (2,700 to 3,300).</p>
+  <p class="cap ar">شروط الشكل: ملف PDF، خط Times New Roman حجم 12، تباعد أسطر 1.5، مراجع بنظام IEEE أو APA، وعدد الكلمات 3000 ±10% (من 2700 إلى 3300).</p>
+</section>
+
+<!-- 3 -->
+<section>
+  <h2><span class="num">03</span><span class="en">Background you need: OT, PLC, Modbus</span><span class="ar">خلفية لازمة: OT و PLC و Modbus</span></h2>
+  <p class="en">The topic chosen is <b>Operational Technology (OT)</b>: the computers that run physical equipment in factories, power plants and substations. The normal office IT world protects data. OT protects machines and people.</p>
+  <p class="ar">الموضوع المختار هو <b>التقنيات التشغيلية (OT)</b>: الأجهزة التي تشغّل المعدات الفعلية في المصانع ومحطات الكهرباء. عالم تقنية المعلومات العادي يحمي البيانات، أما OT فيحمي الآلات والناس.</p>
+  <div class="grid">
+    <div class="card"><h3>PLC</h3>
+      <p class="en">A small industrial computer that controls a machine. It keeps settings in numbered memory slots called <b>registers</b>.</p>
+      <p class="ar">حاسب صناعي صغير يتحكم بآلة. يحفظ الإعدادات في خانات ذاكرة مرقّمة اسمها <b>registers (سجلات)</b>.</p></div>
+    <div class="card"><h3 class="en">Register 16</h3><h3 class="ar">السجل رقم 16</h3>
+      <p class="en">In this project, one register is a <b>setpoint</b> (a target value, like a thermostat temperature). It starts at <b>50</b>.</p>
+      <p class="ar">في المشروع، هذا السجل يمثل <b>قيمة ضبط (setpoint)</b>، مثل درجة الحرارة في المكيّف. قيمته الأصلية <b>50</b>.</p></div>
+    <div class="card"><h3>Modbus/TCP</h3>
+      <p class="en">The "language" engineers' computers use to talk to PLCs over a network. It has <b>no passwords</b>: anyone on the network can send commands.</p>
+      <p class="ar">"اللغة" التي يستخدمها حاسب المهندس للتحدث مع الـ PLC عبر الشبكة. <b>لا يوجد فيها كلمة مرور</b>: أي جهاز على الشبكة يستطيع إرسال أوامر.</p></div>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th class="en">Modbus command</th><th class="ar">أمر Modbus</th><th class="en">Code</th><th class="ar">الرقم</th><th class="en">Meaning</th><th class="ar">المعنى</th></tr></thead>
+    <tbody>
+      <tr><td class="en">Read Holding Registers</td><td class="ar">قراءة السجلات</td><td class="mono">FC 03</td><td class="en">"What is the value now?" Safe, changes nothing.</td><td class="ar">"كم القيمة الآن؟" آمن ولا يغيّر شيئاً.</td></tr>
+      <tr><td class="en">Write Single Register</td><td class="ar">كتابة سجل واحد</td><td class="mono">FC 06</td><td class="en">"Set the value to X." This is the dangerous one. The PLC confirms by echoing the same message back.</td><td class="ar">"اجعل القيمة X". هذا الأمر الخطير. الـ PLC يؤكد التنفيذ بإرجاع نفس الرسالة.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 4 -->
+<section>
+  <h2><span class="num">04</span><span class="en">The story: the "crime" being investigated</span><span class="ar">القصة: "الجريمة" محل التحقيق</span></h2>
+  <p class="en">Someone changed register 16 from <b>50 to 90</b>. There was <b>no approved change request</b> for that period. The investigator must answer:</p>
+  <p class="ar">شخص ما غيّر السجل 16 من <b>50 إلى 90</b>، ولا يوجد <b>أي طلب تغيير معتمد</b> في ذلك الوقت. على المحقق أن يجيب:</p>
+  <div class="note" style="border-color:var(--steel);background:var(--steel-soft)">
+    <p class="en"><b>Investigative question:</b> Can we prove what command was sent, from which machine, at what time, whether the PLC accepted it, and what we <i>cannot</i> prove (for example, which human pressed the key)?</p>
+    <p class="ar"><b>سؤال التحقيق:</b> هل نستطيع إثبات أي أمر أُرسل، ومن أي جهاز، وفي أي وقت، وهل قبله الـ PLC؟ وما الذي <i>لا</i> نستطيع إثباته (مثلاً: أي إنسان ضغط الزر)؟</p>
+  </div>
+  <div class="analogy">
+    <p class="en"><b>Analogy:</b> a factory door was opened at night. The camera footage shows the door opening. The guard's logbook says "door opened at 2:00". Both agree, so you trust it. But neither tells you <i>whose hand</i> opened it.</p>
+    <p class="ar"><b>تشبيه:</b> باب في المصنع فُتح ليلاً. كاميرا المراقبة تُظهر فتح الباب، ودفتر الحارس مكتوب فيه "فُتح الباب الساعة 2:00". الاثنان متفقان فنثق بالقصة. لكن لا أحد منهما يخبرك <i>يد من</i> فتحت الباب.</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <h2><span class="num">05</span><span class="en">The lab Fawaz built</span><span class="ar">المختبر الذي بناه فواز</span></h2>
+  <p class="en">No real factory was touched. Everything runs as virtual machines (VMs) inside VirtualBox on one laptop, connected by a private virtual switch called <span class="mono">OTLAB</span>.</p>
+  <p class="ar">لم يُستخدم أي مصنع حقيقي. كل شيء يعمل كأجهزة افتراضية (VMs) داخل برنامج VirtualBox على لابتوب واحد، متصلة بمحوّل شبكة افتراضي خاص اسمه <span class="mono">OTLAB</span>.</p>
+  <div class="panel ltr">
+    <svg viewBox="0 0 760 390" role="img" aria-label="Lab topology diagram">
+      <rect x="10" y="10" width="740" height="370" rx="10" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="26" y="36" font-size="13" class="en" fill="var(--muted)" style="fill:var(--muted)">Physical laptop running VirtualBox</text>
+      <text x="26" y="36" font-size="14" class="ar" style="fill:var(--muted)">لابتوب حقيقي يشغّل VirtualBox</text>
+
+      <!-- switch -->
+      <rect x="260" y="170" width="240" height="50" rx="6" fill="var(--steel)"/>
+      <text x="380" y="192" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--panel)">OTLAB</text>
+      <text x="380" y="210" text-anchor="middle" font-size="11" class="en" style="fill:var(--panel)">private Internal Network · 10.20.30.0/24</text>
+      <text x="380" y="211" text-anchor="middle" font-size="12" class="ar" style="fill:var(--panel)">شبكة داخلية خاصة · 10.20.30.0/24</text>
+
+      <!-- client -->
+      <rect x="40" y="60" width="200" height="96" rx="8" fill="var(--panel)" stroke="var(--steel)" stroke-width="2"/>
+      <text x="140" y="86" text-anchor="middle" font-size="15" font-weight="700">OT-CLIENT</text>
+      <text x="140" y="106" text-anchor="middle" font-size="12" class="en" style="fill:var(--muted)">fake engineer laptop</text>
+      <text x="140" y="107" text-anchor="middle" font-size="13" class="ar" style="fill:var(--muted)">لابتوب مهندس (وهمي)</text>
+      <text x="140" y="128" text-anchor="middle" font-size="13" font-family="IBM Plex Mono, monospace" style="fill:var(--accent)">10.20.30.20</text>
+      <text x="140" y="146" text-anchor="middle" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">quick_lab.py read / write 90</text>
+
+      <!-- plc -->
+      <rect x="520" y="60" width="210" height="110" rx="8" fill="var(--panel)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="625" y="86" text-anchor="middle" font-size="15" font-weight="700">OT-PLC</text>
+      <text x="625" y="106" text-anchor="middle" font-size="12" class="en" style="fill:var(--muted)">fake PLC + traffic recorder</text>
+      <text x="625" y="107" text-anchor="middle" font-size="13" class="ar" style="fill:var(--muted)">PLC وهمي + مسجّل للحركة</text>
+      <text x="625" y="128" text-anchor="middle" font-size="13" font-family="IBM Plex Mono, monospace" style="fill:var(--accent)">10.20.30.10 : 1502</text>
+      <text x="625" y="146" text-anchor="middle" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">quick_lab.py server · tcpdump</text>
+      <text x="625" y="162" text-anchor="middle" font-size="11" font-family="IBM Plex Mono, monospace" style="fill:var(--muted)">register 16 = 50</text>
+
+      <!-- historian -->
+      <rect x="40" y="250" width="200" height="80" rx="8" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="140" y="276" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--muted)">OT-HIST</text>
+      <text x="140" y="296" text-anchor="middle" font-size="12" class="en" style="fill:var(--muted)">optional 3rd witness</text>
+      <text x="140" y="297" text-anchor="middle" font-size="13" class="ar" style="fill:var(--muted)">شاهد ثالث اختياري</text>
+      <text x="140" y="316" text-anchor="middle" font-size="12" font-weight="700" class="en" style="fill:var(--bad)">NOT USED</text>
+      <text x="140" y="317" text-anchor="middle" font-size="13" font-weight="700" class="ar" style="fill:var(--bad)">لم يُستخدم</text>
+
+      <!-- evidence store -->
+      <rect x="520" y="250" width="210" height="110" rx="8" fill="var(--panel)" stroke="var(--ok)" stroke-width="2"/>
+      <text x="625" y="274" text-anchor="middle" font-size="13" font-weight="700" class="en" style="fill:var(--ok)">Evidence produced</text>
+      <text x="625" y="275" text-anchor="middle" font-size="14" font-weight="700" class="ar" style="fill:var(--ok)">الأدلة الناتجة</text>
+      <text x="625" y="296" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">baseline.pcap</text>
+      <text x="625" y="313" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">incident.pcap</text>
+      <text x="625" y="330" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">plc_audit.jsonl</text>
+      <text x="625" y="347" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">SHA256SUMS.txt</text>
+
+      <!-- links -->
+      <line x1="140" y1="156" x2="300" y2="170" stroke="var(--steel)" stroke-width="3"/>
+      <line x1="625" y1="170" x2="460" y2="170" stroke="var(--steel)" stroke-width="3"/>
+      <line x1="140" y1="250" x2="300" y2="220" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/>
+      <line x1="625" y1="170" x2="625" y2="250" stroke="var(--ok)" stroke-width="2"/>
+      <polygon points="619,242 631,242 625,252" fill="var(--ok)"/>
+
+      <!-- NAT question -->
+      <line x1="380" y1="170" x2="380" y2="80" stroke="var(--warn)" stroke-width="2" stroke-dasharray="4 4"/>
+      <rect x="300" y="44" width="160" height="40" rx="6" fill="var(--warn-soft)" stroke="var(--warn)"/>
+      <text x="380" y="62" text-anchor="middle" font-size="12" font-weight="700" class="en" style="fill:var(--warn)">NAT / Internet adapter</text>
+      <text x="380" y="62" text-anchor="middle" font-size="13" font-weight="700" class="ar" style="fill:var(--warn)">محوّل الإنترنت NAT</text>
+      <text x="380" y="78" text-anchor="middle" font-size="11" class="en" style="fill:var(--warn)">off during test? not proven</text>
+      <text x="380" y="78" text-anchor="middle" font-size="12" class="ar" style="fill:var(--warn)">هل أُطفئ أثناء التجربة؟ غير مثبت</text>
+    </svg>
+  </div>
+  <p class="cap en">Solid lines were used. Dashed grey was planned but not done. The amber box is an open question from the VirtualBox screenshots.</p>
+  <p class="cap ar">الخطوط المتصلة استُخدمت فعلاً. الرمادي المتقطع كان مخططاً ولم يُنفّذ. المربع البرتقالي سؤال مفتوح ظهر في صور VirtualBox.</p>
+</section>
+
+<!-- 6 -->
+<section>
+  <h2><span class="num">06</span><span class="en">What happened on 26 October 2026 (UTC)</span><span class="ar">ماذا حدث يوم 26 أكتوبر 2026 (بتوقيت UTC)</span></h2>
+  <p class="en">The experiment had two phases. Phase 1 is a "normal day" for comparison (scientists call this a <b>negative control</b>). Phase 2 is the incident.</p>
+  <p class="ar">التجربة على مرحلتين. المرحلة الأولى "يوم عادي" للمقارنة (يسمّونها <b>عيّنة ضابطة سلبية</b>). المرحلة الثانية هي الحادثة.</p>
+  <div class="panel ltr">
+    <svg viewBox="0 0 760 230" role="img" aria-label="Timeline of reads and the write">
+      <line x1="30" y1="120" x2="740" y2="120" stroke="var(--line)" stroke-width="3"/>
+      <!-- phase labels -->
+      <rect x="30" y="20" width="250" height="28" rx="5" fill="var(--steel-soft)"/>
+      <text x="155" y="39" text-anchor="middle" font-size="13" font-weight="600" class="en" style="fill:var(--steel)">Phase 1 · baseline.pcap</text>
+      <text x="155" y="39" text-anchor="middle" font-size="14" font-weight="600" class="ar" style="fill:var(--steel)">المرحلة 1 · baseline.pcap</text>
+      <rect x="320" y="20" width="420" height="28" rx="5" fill="var(--accent-soft)"/>
+      <text x="530" y="39" text-anchor="middle" font-size="13" font-weight="600" class="en" style="fill:var(--accent)">Phase 2 · incident.pcap</text>
+      <text x="530" y="39" text-anchor="middle" font-size="14" font-weight="600" class="ar" style="fill:var(--accent)">المرحلة 2 · incident.pcap</text>
+      <!-- events -->
+      <g font-family="IBM Plex Mono, monospace" font-size="11">
+        <circle cx="70" cy="120" r="9" fill="var(--steel)"/><text x="70" y="95" text-anchor="middle">16:27:40</text><text x="70" y="152" text-anchor="middle" font-weight="600">READ 50</text>
+        <circle cx="155" cy="120" r="9" fill="var(--steel)"/><text x="155" y="95" text-anchor="middle">16:27:41</text><text x="155" y="152" text-anchor="middle" font-weight="600">READ 50</text>
+        <circle cx="240" cy="120" r="9" fill="var(--steel)"/><text x="240" y="95" text-anchor="middle">16:27:42</text><text x="240" y="152" text-anchor="middle" font-weight="600">READ 50</text>
+        <circle cx="380" cy="120" r="9" fill="var(--steel)"/><text x="380" y="95" text-anchor="middle">16:31:17</text><text x="380" y="152" text-anchor="middle" font-weight="600">READ 50</text>
+        <circle cx="530" cy="120" r="14" fill="var(--accent)"/><text x="530" y="95" text-anchor="middle" font-weight="600" style="fill:var(--accent)">16:31:30.220</text><text x="530" y="157" text-anchor="middle" font-weight="700" font-size="13" style="fill:var(--accent)">WRITE 90</text>
+        <circle cx="680" cy="120" r="9" fill="var(--steel)"/><text x="680" y="95" text-anchor="middle">16:31:33</text><text x="680" y="152" text-anchor="middle" font-weight="600">READ 90</text>
+      </g>
+      <text x="155" y="195" text-anchor="middle" font-size="12" class="en" style="fill:var(--muted)">3 reads, no write: the "clean" reference</text>
+      <text x="155" y="195" text-anchor="middle" font-size="13" class="ar" style="fill:var(--muted)">3 قراءات بدون كتابة: المرجع "النظيف"</text>
+      <text x="530" y="195" text-anchor="middle" font-size="12" class="en" style="fill:var(--muted)">before = 50 → write → after = 90</text>
+      <text x="530" y="195" text-anchor="middle" font-size="13" class="ar" style="fill:var(--muted)">قبل = 50 ← كتابة ← بعد = 90</text>
+    </svg>
+  </div>
+</section>
+
+<!-- 7 -->
+<section>
+  <h2><span class="num">07</span><span class="en">The evidence files, and what each one is</span><span class="ar">ملفات الأدلة، وما هو كل ملف</span></h2>
+  <div class="tw"><table>
+    <thead><tr><th class="en">File</th><th class="ar">الملف</th><th class="en">What it is</th><th class="ar">ما هو</th><th class="en">Analogy</th><th class="ar">التشبيه</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">baseline.pcap</td><td class="en">Recording of all network packets during the normal phase (30 packets).</td><td class="ar">تسجيل لكل حزم الشبكة خلال المرحلة العادية (30 حزمة).</td><td class="en">CCTV on a quiet night</td><td class="ar">كاميرا في ليلة هادئة</td></tr>
+      <tr><td class="mono">incident.pcap</td><td class="en">Recording of all packets during the incident (30 packets).</td><td class="ar">تسجيل كل الحزم أثناء الحادثة (30 حزمة).</td><td class="en">CCTV of the break-in</td><td class="ar">كاميرا ليلة الحادثة</td></tr>
+      <tr><td class="mono">plc_audit.jsonl</td><td class="en">The PLC's own diary: one line per command, with time, sender IP, value before and after.</td><td class="ar">مذكرات الـ PLC نفسه: سطر لكل أمر، فيه الوقت وعنوان المرسل والقيمة قبل وبعد.</td><td class="en">Guard's logbook</td><td class="ar">دفتر الحارس</td></tr>
+      <tr><td class="mono">plc_console.txt</td><td class="en">Copy of what the PLC printed on screen. Same content as the diary.</td><td class="ar">نسخة مما طبعه الـ PLC على الشاشة. نفس محتوى المذكرات.</td><td class="en">Photocopy of the logbook</td><td class="ar">صورة من الدفتر</td></tr>
+      <tr><td class="mono">SHA256SUMS.txt</td><td class="en">A unique "fingerprint" (hash) of each file. If one byte changes, the fingerprint changes.</td><td class="ar">"بصمة" فريدة (hash) لكل ملف. لو تغيّر بايت واحد تتغير البصمة.</td><td class="en">Tamper-proof seal on the evidence bag</td><td class="ar">ختم أمان على كيس الأدلة</td></tr>
+      <tr><td class="mono">Screenshots/ (20)</td><td class="en">Photos of each step: VirtualBox settings, IPs, ping, commands, Wireshark decode.</td><td class="ar">صور لكل خطوة: إعدادات VirtualBox، العناوين، ping، الأوامر، وتحليل Wireshark.</td><td class="en">Crime-scene photos</td><td class="ar">صور مسرح الجريمة</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 8 -->
+<section>
+  <h2><span class="num">08</span><span class="en">What the evidence proves (I re-checked it myself)</span><span class="ar">ماذا تثبت الأدلة (راجعتها بنفسي)</span></h2>
+  <p class="en">Here is the actual write command, packet 14 in <span class="mono">incident.pcap</span>, byte by byte. Every Modbus message has a 7-byte header (the "envelope") and then the command itself.</p>
+  <p class="ar">هذا هو أمر الكتابة الفعلي، الحزمة رقم 14 في <span class="mono">incident.pcap</span>، بايت ببايت. كل رسالة Modbus فيها رأس من 7 بايت ("الظرف") ثم الأمر نفسه.</p>
+  <div class="panel">
+    <div class="bytes">
+      <div class="byte"><code>00 01</code><small class="en">transaction ID = 1</small><small class="ar">رقم العملية = 1</small></div>
+      <div class="byte"><code>00 00</code><small class="en">protocol = Modbus</small><small class="ar">البروتوكول = Modbus</small></div>
+      <div class="byte"><code>00 06</code><small class="en">6 bytes follow</small><small class="ar">يتبعها 6 بايت</small></div>
+      <div class="byte"><code>01</code><small class="en">unit ID = 1</small><small class="ar">رقم الجهاز = 1</small></div>
+      <div class="byte hot"><code>06</code><small class="en">FC 06 = WRITE</small><small class="ar">FC 06 = كتابة</small></div>
+      <div class="byte hot"><code>00 10</code><small class="en">register 0x10 = 16</small><small class="ar">السجل 0x10 = 16</small></div>
+      <div class="byte hot"><code>00 5A</code><small class="en">value 0x5A = 90</small><small class="ar">القيمة 0x5A = 90</small></div>
+    </div>
+  </div>
+  <p class="en">Then three independent checks point at the same event. In forensics this agreement is called <b>corroboration</b>, and it is what turns a guess into a finding.</p>
+  <p class="ar">ثم ثلاثة فحوصات مستقلة تشير لنفس الحدث. في الأدلة الجنائية هذا الاتفاق اسمه <b>التعزيز (corroboration)</b>، وهو ما يحوّل التخمين إلى نتيجة مثبتة.</p>
+  <div class="panel ltr">
+    <svg viewBox="0 0 760 250" role="img" aria-label="Three evidence sources agree on the write event">
+      <rect x="20" y="20" width="220" height="110" rx="8" fill="var(--panel)" stroke="var(--steel)" stroke-width="2"/>
+      <text x="130" y="46" text-anchor="middle" font-size="14" font-weight="700" class="en">Network recording</text>
+      <text x="130" y="46" text-anchor="middle" font-size="15" font-weight="700" class="ar">تسجيل الشبكة</text>
+      <text x="130" y="70" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">frame 14: FC06 reg16=90</text>
+      <text x="130" y="88" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">frame 16: PLC echo (ACK)</text>
+      <text x="130" y="110" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace" style="fill:var(--accent)">16:31:30.220</text>
+
+      <rect x="270" y="20" width="220" height="110" rx="8" fill="var(--panel)" stroke="var(--steel)" stroke-width="2"/>
+      <text x="380" y="46" text-anchor="middle" font-size="14" font-weight="700" class="en">PLC audit log</text>
+      <text x="380" y="46" text-anchor="middle" font-size="15" font-weight="700" class="ar">سجل الـ PLC</text>
+      <text x="380" y="70" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">WRITE_APPLIED</text>
+      <text x="380" y="88" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">before 50 → after 90</text>
+      <text x="380" y="110" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace" style="fill:var(--accent)">16:31:30.230 (+10 ms)</text>
+
+      <rect x="520" y="20" width="220" height="110" rx="8" fill="var(--panel)" stroke="var(--steel)" stroke-width="2"/>
+      <text x="630" y="46" text-anchor="middle" font-size="14" font-weight="700" class="en">Read-back after</text>
+      <text x="630" y="46" text-anchor="middle" font-size="15" font-weight="700" class="ar">قراءة بعد التغيير</text>
+      <text x="630" y="70" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">frame 26: value = 0x5A</text>
+      <text x="630" y="88" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace">Register 16 = 90</text>
+      <text x="630" y="110" text-anchor="middle" font-size="11.5" font-family="IBM Plex Mono, monospace" style="fill:var(--accent)">16:31:33.944</text>
+
+      <line x1="130" y1="130" x2="370" y2="180" stroke="var(--ok)" stroke-width="2.5"/>
+      <line x1="380" y1="130" x2="380" y2="180" stroke="var(--ok)" stroke-width="2.5"/>
+      <line x1="630" y1="130" x2="390" y2="180" stroke="var(--ok)" stroke-width="2.5"/>
+      <rect x="200" y="180" width="360" height="56" rx="8" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="2"/>
+      <text x="380" y="204" text-anchor="middle" font-size="14" font-weight="700" class="en" style="fill:var(--ok)">Finding: 10.20.30.20 changed reg 16 from 50 to 90</text>
+      <text x="380" y="205" text-anchor="middle" font-size="15" font-weight="700" class="ar" style="fill:var(--ok)">النتيجة: الجهاز 10.20.30.20 غيّر السجل 16 من 50 إلى 90</text>
+      <text x="380" y="224" text-anchor="middle" font-size="12" class="en" style="fill:var(--ok)">and the PLC accepted it</text>
+      <text x="380" y="225" text-anchor="middle" font-size="13" class="ar" style="fill:var(--ok)">والـ PLC قَبِل التغيير</text>
+    </svg>
+  </div>
+  <ul class="status">
+    <li><span class="pill p-ok">OK</span><span class="en">All 4 hashes still match <span class="mono">SHA256SUMS.txt</span>, so the files were not changed after collection.</span><span class="ar">البصمات الأربع ما زالت مطابقة لملف <span class="mono">SHA256SUMS.txt</span>، أي أن الملفات لم تتغير بعد جمعها.</span></li>
+    <li><span class="pill p-ok">OK</span><span class="en"><span class="mono">baseline.pcap</span> has zero write commands. Only 3 reads, all returning 50.</span><span class="ar">ملف <span class="mono">baseline.pcap</span> لا يحتوي أي أمر كتابة. فقط 3 قراءات وكلها 50.</span></li>
+    <li><span class="pill p-ok">OK</span><span class="en">The packet times and the PLC log times line up within milliseconds for every command.</span><span class="ar">أوقات الحزم وأوقات سجل الـ PLC متطابقة بفارق أجزاء من الثانية لكل أمر.</span></li>
+  </ul>
+</section>
+
+<!-- 9 -->
+<section>
+  <h2><span class="num">09</span><span class="en">Fact, inference, unknown</span><span class="ar">حقيقة، استنتاج، مجهول</span></h2>
+  <p class="en">The brief grades you on keeping these three apart. This is the most "detective-like" part of the report.</p>
+  <p class="ar">ملف المتطلبات يعطي درجات على الفصل بين هذه الثلاثة. هذا أكثر جزء "تحقيقي" في التقرير.</p>
+  <div class="cols3">
+    <div class="col c-ok"><h3 class="en">Observed facts</h3><h3 class="ar">حقائق مُشاهَدة</h3>
+      <ul class="en"><li>A write FC06, reg 16, value 90 was sent from 10.20.30.20.</li><li>The PLC echoed it back (accepted).</li><li>The PLC log recorded 50 → 90.</li><li>A later read returned 90.</li></ul>
+      <ul class="ar"><li>أُرسل أمر كتابة FC06 للسجل 16 بالقيمة 90 من 10.20.30.20.</li><li>الـ PLC أرجع نفس الرسالة (قَبِل).</li><li>سجل الـ PLC دوّن 50 ← 90.</li><li>قراءة لاحقة أعطت 90.</li></ul></div>
+    <div class="col c-warn"><h3 class="en">Reasonable inferences</h3><h3 class="ar">استنتاجات معقولة</h3>
+      <ul class="en"><li>The change was unauthorized, but only because the scenario says no change request existed.</li><li>The command came from the OT-CLIENT VM, since it owned that IP.</li></ul>
+      <ul class="ar"><li>التغيير غير مصرّح به، فقط لأن السيناريو يقول لا يوجد طلب تغيير.</li><li>الأمر جاء من جهاز OT-CLIENT لأنه صاحب هذا العنوان.</li></ul></div>
+    <div class="col c-bad"><h3 class="en">Unknowns</h3><h3 class="ar">أمور مجهولة</h3>
+      <ul class="en"><li>Which human typed the command. Modbus has no user login.</li><li>Whether an IP could have been spoofed.</li><li>Any physical effect. There is no real machine.</li></ul>
+      <ul class="ar"><li>أي إنسان كتب الأمر. Modbus لا يوجد فيه تسجيل دخول.</li><li>هل يمكن أن يكون العنوان مزوّراً.</li><li>أي أثر فيزيائي، فلا توجد آلة حقيقية.</li></ul></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section>
+  <h2><span class="num">10</span><span class="en">Is "only the report missing"? Mostly yes.</span><span class="ar">هل "ينقص التقرير فقط"؟ غالباً نعم.</span></h2>
+  <ul class="status">
+    <li><span class="pill p-ok">DONE</span><span class="en">Lab built, experiment run, evidence collected and hashed, 20 screenshots.</span><span class="ar">المختبر مبني، والتجربة منفّذة، والأدلة مجموعة ومختومة، و20 صورة.</span></li>
+    <li><span class="pill p-ok">DONE</span><span class="en">Theory parts of the report (Parts A, B, C, legal section) are written and solid.</span><span class="ar">الأجزاء النظرية في التقرير (A و B و C والقسم القانوني) مكتوبة وجيدة.</span></li>
+    <li><span class="pill p-bad">MISSING</span><span class="en">Report Sections 5 and 6 (experiment and findings) are empty, marked "PENDING". These are worth about 27 marks.</span><span class="ar">القسمان 5 و 6 في التقرير (التجربة والنتائج) فارغان ومكتوب عليهما "PENDING". وزنهما حوالي 27 درجة.</span></li>
+    <li><span class="pill p-bad">MISSING</span><span class="en">Names, IDs, instructor; evidence table, timeline, real hashes, screenshots in the report.</span><span class="ar">الأسماء والأرقام الجامعية واسم الدكتور، وجدول الأدلة والخط الزمني والبصمات الحقيقية والصور داخل التقرير.</span></li>
+    <li><span class="pill p-warn">FIX</span><span class="en">Draft is 3,340 words; it must fit 2,700 to 3,300 once the new sections are added. It must be shortened.</span><span class="ar">المسودة 3340 كلمة، ويجب أن تكون بين 2700 و 3300 بعد إضافة الأقسام الجديدة، فلا بد من الاختصار.</span></li>
+    <li><span class="pill p-warn">FIX</span><span class="en">Slides 7 and 8 are placeholders. Fawaz plans to record the talk, so they need real findings.</span><span class="ar">الشريحتان 7 و 8 فارغتان. فواز سيسجّل العرض، فتحتاجان النتائج الحقيقية.</span></li>
+  </ul>
+</section>
+
+<!-- 11 -->
+<section>
+  <h2><span class="num">11</span><span class="en">Weak spots we must state honestly</span><span class="ar">نقاط ضعف يجب ذكرها بصراحة</span></h2>
+  <p class="en">These are not failures. The marking scheme gives 7 marks for recognising limits. We must <b>not</b> invent data to fill them: the brief calls fabricated results "serious academic misconduct".</p>
+  <p class="ar">هذه ليست أخطاء. سلّم الدرجات يعطي 7 درجات على الاعتراف بالقيود. ويجب <b>ألا</b> نخترع بيانات لسدّها: ملف المتطلبات يسمي النتائج المختلقة "مخالفة أكاديمية جسيمة".</p>
+  <div class="grid">
+    <div class="card"><h3 class="en">Same clock</h3><h3 class="ar">نفس الساعة</h3><p class="en">The packet recorder and the PLC log ran on the same VM, so their times are not truly independent.</p><p class="ar">مسجّل الحزم وسجل الـ PLC يعملان على نفس الجهاز، فأوقاتهما ليست مستقلة فعلاً.</p></div>
+    <div class="card"><h3 class="en">No third witness</h3><h3 class="ar">لا يوجد شاهد ثالث</h3><p class="en">The historian VM and the clock-skew test were planned but not run. <span class="mono">historian.py</span> is not even in the repo.</p><p class="ar">جهاز الـ historian واختبار فرق الساعة كانا مخططين ولم يُنفّذا. وملف <span class="mono">historian.py</span> غير موجود أصلاً.</p></div>
+    <div class="card"><h3 class="en">Isolation not proven</h3><h3 class="ar">العزل غير مثبت</h3><p class="en">VirtualBox lists Adapter 1 as "NAT Network". We cannot show the internet link was off during the test.</p><p class="ar">VirtualBox يُظهر المحوّل الأول "NAT Network". لا نستطيع إثبات أن الإنترنت كان مفصولاً أثناء التجربة.</p></div>
+    <div class="card"><h3 class="en">Tool warning</h3><h3 class="ar">تحذير الأداة</h3><p class="en">tshark said "Unable to classify as query or response" because port 1502 is not Modbus's normal 502. A good point to discuss as a tool limitation.</p><p class="ar">برنامج tshark قال "Unable to classify" لأن المنفذ 1502 ليس منفذ Modbus المعتاد 502. نقطة جيدة لمناقشتها كقيد في الأداة.</p></div>
+    <div class="card"><h3 class="en">Toy PLC</h3><h3 class="ar">PLC تعليمي</h3><p class="en">It is an 88-line Python script with one register, not a real controller. Results show the method, not real plant behaviour.</p><p class="ar">هو سكربت بايثون من 88 سطراً بسجل واحد، وليس جهاز تحكم حقيقي. النتائج تُثبت المنهجية لا سلوك مصنع حقيقي.</p></div>
+    <div class="card"><h3 class="en">Endpoint capture</h3><h3 class="ar">التسجيل من الجهاز نفسه</h3><p class="en">Traffic was recorded on the PLC itself, not on a separate network tap as a real plant would use.</p><p class="ar">الحركة سُجّلت على الـ PLC نفسه، وليس عبر جهاز تنصّت منفصل كما في المصانع الحقيقية.</p></div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section>
+  <div class="note">
+    <h3 class="en">A note on AI use</h3><h3 class="ar">ملاحظة حول استخدام الذكاء الاصطناعي</h3>
+    <p class="en">Section 9 of the brief says permitted AI use "should be appropriately disclosed", and that the instructor "may request … additional explanation of any submitted work". So I will write in a plain, natural student voice, but I will not add fake grammar mistakes to disguise AI use. I recommend a one-line AI-use statement in the appendix. Most important: the student who submits must understand this page well enough to answer questions.</p>
+    <p class="ar">القسم 9 في ملف المتطلبات يقول إن استخدام الذكاء الاصطناعي المسموح "يجب الإفصاح عنه"، وإن الدكتور "قد يطلب شرحاً إضافياً لأي عمل مُسلَّم". لذلك سأكتب بأسلوب طالب طبيعي وبسيط، لكن لن أضيف أخطاء لغوية مصطنعة لإخفاء استخدام الذكاء الاصطناعي. أنصح بسطر واحد للإفصاح في الملحق. والأهم: الطالب الذي يسلّم يجب أن يفهم هذه الصفحة جيداً ليجيب عن أي سؤال.</p>
+  </div>
+</section>
+
+<!-- 13 -->
+<section>
+  <h2><span class="num">13</span><span class="en">The plan, once you give the green light</span><span class="ar">الخطة بعد الموافقة</span></h2>
+  <ol class="plan en">
+    <li><span>Verify every reference with a web search; add 2 to 4 academic papers on OT/ICS forensics.</span></li>
+    <li><span>Shorten Parts A to C and the legal section, keeping the good content, to make room.</span></li>
+    <li><span>Write Section 5 (experiment): setup, IPs, commands, tool versions, evidence table with real hashes, chain-of-custody table.</span></li>
+    <li><span>Write Section 6 (findings): byte decode, merged UTC timeline, hypotheses H1 to H4 judged, validation by 3 methods, fact / inference / unknown.</span></li>
+    <li><span>Write the limitations and recommendations from section 11 of this page.</span></li>
+    <li><span>Draw figures (topology with real IPs, framework flowchart, timeline) and put screenshots in the appendix.</span></li>
+    <li><span>Format to the brief (Times New Roman 12, 1.5 spacing, IEEE), count words, re-check every number, deliver .docx + PDF, commit to the branch.</span></li>
+  </ol>
+  <ol class="plan ar">
+    <li><span>التحقق من كل مرجع عبر البحث في الإنترنت، وإضافة 2 إلى 4 أوراق علمية عن أدلة OT/ICS.</span></li>
+    <li><span>اختصار الأجزاء A إلى C والقسم القانوني مع الحفاظ على المحتوى الجيد، لإفساح المجال.</span></li>
+    <li><span>كتابة القسم 5 (التجربة): الإعداد، العناوين، الأوامر، إصدارات الأدوات، جدول الأدلة بالبصمات الحقيقية، وجدول سلسلة الحيازة.</span></li>
+    <li><span>كتابة القسم 6 (النتائج): تفكيك البايتات، خط زمني موحّد، تقييم الفرضيات H1 إلى H4، التحقق بثلاث طرق، والفصل بين الحقيقة والاستنتاج والمجهول.</span></li>
+    <li><span>كتابة القيود والتوصيات من القسم 11 في هذه الصفحة.</span></li>
+    <li><span>رسم الأشكال (الشبكة بالعناوين الحقيقية، مخطط الإطار، الخط الزمني) ووضع الصور في الملحق.</span></li>
+    <li><span>التنسيق حسب المتطلبات (Times New Roman 12، تباعد 1.5، IEEE)، عدّ الكلمات، مراجعة كل رقم، تسليم ملف Word و PDF، ورفعه على الفرع.</span></li>
+  </ol>
+  <h3 class="en">Questions I need answered</h3><h3 class="ar">أسئلة أحتاج إجابتها</h3>
+  <details open><summary class="en">1 · Names</summary><summary class="ar">1 · الأسماء</summary>
+    <p class="en">Both students' names and IDs, and the instructor's name. Or should I leave placeholders?</p><p class="ar">اسم الطالبين وأرقامهما الجامعية واسم الدكتور. أم أترك مكانها فارغاً؟</p></details>
+  <details open><summary class="en">2 · Slides</summary><summary class="ar">2 · الشرائح</summary>
+    <p class="en">Should I also update the slides with the real findings, since Fawaz will record the talk?</p><p class="ar">هل أحدّث الشرائح أيضاً بالنتائج الحقيقية بما أن فواز سيسجّل العرض؟</p></details>
+  <details open><summary class="en">3 · NAT adapter</summary><summary class="ar">3 · محوّل NAT</summary>
+    <p class="en">Does Fawaz know if the internet (NAT) adapter was switched off during the test? If not, I will write "not verified".</p><p class="ar">هل يعرف فواز إن كان محوّل الإنترنت (NAT) مُطفأً أثناء التجربة؟ إن لم يعرف سأكتب "غير مُتحقَّق منه".</p></details>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, en=document.getElementById('btn-en'), ar=document.getElementById('btn-ar');
+  function set(l){
+    root.lang=l; root.dir=(l==='ar')?'rtl':'ltr';
+    en.setAttribute('aria-pressed', l==='en'); ar.setAttribute('aria-pressed', l==='ar');
+    try{localStorage.setItem('sec524-lang',l)}catch(e){}
+  }
+  en.addEventListener('click',function(){set('en')});
+  ar.addEventListener('click',function(){set('ar')});
+  var saved='en'; try{saved=localStorage.getItem('sec524-lang')||'en'}catch(e){}
+  set(saved);
+})();
+</script>
