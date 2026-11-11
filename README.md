@@ -15,6 +15,9 @@
 ## 📖 لفهم المشروع
 حمّل ملف [`START_HERE_Project_Explained.html`](START_HERE_Project_Explained.html) وافتحه في المتصفح، واضغط زر **عربي** في الأعلى.
 
+## 🗂️ سياق المشروع كاملاً
+ملف [`PROJECT_CONTEXT_Conversation.md`](PROJECT_CONTEXT_Conversation.md) يشرح بالترتيب كل ما حدث في المحادثة، وكل القرارات، وما يجب فهمه قبل أي سؤال من الدكتور.
+
 ## ✏️ أماكن الأسماء (كلها مظلّلة بالأصفر)
 1. **التقرير، الصفحة الأولى:** اسم الطالبين، والأرقام الجامعية، واسم الدكتور.
 2. **التقرير، الملحق B جدول B2:** الخطوات 1–3 اسم فواز، والخطوات 4–5 اسم صديقك.
@@ -43,6 +46,7 @@
 ```
 FINAL_SUBMISSION/                   ← everything to submit
 START_HERE_Project_Explained.html   ← open in a browser to understand the project (EN / AR)
+PROJECT_CONTEXT_Conversation.md     ← full context: what was done, the decisions, and what to discuss with Fawaz
 SUPPORTING_FILES/                   ← same content as the zip, browsable on GitHub
 OLD_Original_Files/                 ← original files received (brief, Fawaz's drafts). Do NOT submit
 ```
