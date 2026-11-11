@@ -1,0 +1,49 @@
+$ tshark --version
+TShark (Wireshark) 4.2.2 (Git v4.2.2 packaged as 4.2.2-1.1build3).
+
+$ tshark -r baseline.pcap -d tcp.port==1502,mbtcp -Y 'modbus.func_code == 6'
+
+$ tshark -r incident.pcap -d tcp.port==1502,mbtcp -Y 'modbus.func_code == 6'
+   14  12.631225  10.20.30.20 → 10.20.30.10  Modbus/TCP 78  unknown: Trans:     1; Unit:   1, Func:   6: Write Single Register. Unable to classify as query or response.
+   16  12.638099  10.20.30.10 → 10.20.30.20  Modbus/TCP 78  unknown: Trans:     1; Unit:   1, Func:   6: Write Single Register. Unable to classify as query or response.
+
+$ tshark -r incident.pcap -o mbtcp.tcp.port:1502 -Y modbus
+    4   0.000717  10.20.30.20 → 10.20.30.10  Modbus/TCP 78    Query: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+    6   0.004993  10.20.30.10 → 10.20.30.20  Modbus/TCP 77 Response: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+   14  12.631225  10.20.30.20 → 10.20.30.10  Modbus/TCP 78    Query: Trans:     1; Unit:   1, Func:   6: Write Single Register
+   16  12.638099  10.20.30.10 → 10.20.30.20  Modbus/TCP 78 Response: Trans:     1; Unit:   1, Func:   6: Write Single Register
+   24  16.353912  10.20.30.20 → 10.20.30.10  Modbus/TCP 78    Query: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+   26  16.355162  10.20.30.10 → 10.20.30.20  Modbus/TCP 77 Response: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+
+$ tshark -r baseline.pcap -o mbtcp.tcp.port:1502 -Y modbus
+    4   0.000641  10.20.30.20 → 10.20.30.10  Modbus/TCP 78    Query: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+    6   0.002236  10.20.30.10 → 10.20.30.20  Modbus/TCP 77 Response: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+   14   1.106573  10.20.30.20 → 10.20.30.10  Modbus/TCP 78    Query: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+   16   1.107476  10.20.30.10 → 10.20.30.20  Modbus/TCP 77 Response: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+   24   2.140416  10.20.30.20 → 10.20.30.10  Modbus/TCP 78    Query: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+   26   2.145465  10.20.30.10 → 10.20.30.20  Modbus/TCP 77 Response: Trans:     1; Unit:   1, Func:   3: Read Holding Registers
+
+$ tshark -r incident.pcap -o mbtcp.tcp.port:1502 -Y 'modbus' -T fields -E separator=, -e frame.number -e frame.time_epoch -e ip.src -e tcp.srcport -e ip.dst -e mbtcp.trans_id -e modbus.func_code -e modbus.reference_num -e modbus.regval_uint16 -e modbus.request_frame -e modbus.response_time
+4,1793032277.589642000,10.20.30.20,45510,10.20.30.10,1,3,16,,,
+6,1793032277.593918000,10.20.30.10,1502,10.20.30.20,1,3,,50,4,0.004276000
+14,1793032290.220150000,10.20.30.20,45712,10.20.30.10,1,6,16,,,
+16,1793032290.227024000,10.20.30.10,1502,10.20.30.20,1,6,16,,14,0.006874000
+24,1793032293.942837000,10.20.30.20,45714,10.20.30.10,1,3,16,,,
+26,1793032293.944087000,10.20.30.10,1502,10.20.30.20,1,3,,90,24,0.001250000
+
+$ tshark -r incident.pcap -o mbtcp.tcp.port:1502 -Y 'frame.number==14' -O mbtcp,modbus
+Frame 14: 78 bytes on wire (624 bits), 78 bytes captured (624 bits)
+Ethernet II, Src: PCSSystemtec_54:3a:c1 (08:00:27:54:3a:c1), Dst: PCSSystemtec_98:29:63 (08:00:27:98:29:63)
+Internet Protocol Version 4, Src: 10.20.30.20, Dst: 10.20.30.10
+Transmission Control Protocol, Src Port: 45712, Dst Port: 1502, Seq: 1, Ack: 1, Len: 12
+Modbus/TCP
+    Transaction Identifier: 1
+    Protocol Identifier: 0
+    Length: 6
+    Unit Identifier: 1
+Modbus
+    .000 0110 = Function Code: Write Single Register (6)
+    Reference Number: 16
+    Data: 005a
+
+

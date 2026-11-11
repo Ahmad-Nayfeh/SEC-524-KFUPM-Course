@@ -1,0 +1,7 @@
+Simulated PLC register 16 = 50; listening at 10.20.30.10:1502
+{"time_utc": "2026-10-26T16:27:40.848673+00:00", "client_ip": "10.20.30.20", "event": "READ", "function": 3, "register": 16, "argument": 1, "before": 50, "after": 50}
+{"time_utc": "2026-10-26T16:27:41.954475+00:00", "client_ip": "10.20.30.20", "event": "READ", "function": 3, "register": 16, "argument": 1, "before": 50, "after": 50}
+{"time_utc": "2026-10-26T16:27:42.991877+00:00", "client_ip": "10.20.30.20", "event": "READ", "function": 3, "register": 16, "argument": 1, "before": 50, "after": 50}
+{"time_utc": "2026-10-26T16:31:17.594328+00:00", "client_ip": "10.20.30.20", "event": "READ", "function": 3, "register": 16, "argument": 1, "before": 50, "after": 50}
+{"time_utc": "2026-10-26T16:31:30.230534+00:00", "client_ip": "10.20.30.20", "event": "WRITE_APPLIED", "function": 6, "register": 16, "argument": 90, "before": 50, "after": 90}
+{"time_utc": "2026-10-26T16:31:33.944305+00:00", "client_ip": "10.20.30.20", "event": "READ", "function": 3, "register": 16, "argument": 1, "before": 90, "after": 90}
